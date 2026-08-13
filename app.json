@@ -1,0 +1,28 @@
+{
+  "expo": {
+    "name": "TaskFlow Mobile",
+    "slug": "taskflow-mobile",
+    "version": "0.9.0",
+    "orientation": "portrait",
+    "icon": "./assets/icon.png",
+    "userInterfaceStyle": "light",
+    "splash": {
+      "image": "./assets/splash.png",
+      "resizeMode": "contain",
+      "backgroundColor": "#F4F6F8"
+    },
+    "assetBundlePatterns": ["**/*"],
+    "android": {
+      "package": "br.com.senac.taskflow",
+      "versionCode": 9,
+      "adaptiveIcon": {
+        "foregroundImage": "./assets/adaptive-icon.png",
+        "backgroundColor": "#F4F6F8"
+      }
+    },
+    "ios": {
+      "bundleIdentifier": "br.com.senac.taskflow",
+      "buildNumber": "9"
+    }
+  }
+}
