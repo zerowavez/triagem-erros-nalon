@@ -1,7 +1,7 @@
 # Sprint 1 --- Relatório de Triagem, Investigação e Correção
 
 **Equipe:** Os Leôncios
-**Integrantes:** ~~Luiz Felipe Matheus~~, Stephany, Lucas Torino
+**Integrantes:** Luiz Felipe Matheus, Stephany, Lucas Torino
 **Data:** 13/08/26
 **Relatório analisado da equipe:** RADU 😎
 **Ambiente utilizado:** Android Studio com Pixel 7 (API 37)
@@ -248,11 +248,12 @@ Para cada ocorrência, informe o resultado da validação.
 ### Ordem de prioridade definida pela equipe
 
 1.  BUG-002
-2.  
+2.  BUG-001
 3.  
 
 **Justifique brevemente a priorização realizada:**
 1. Escolhemos o BUG-002 por ser relativamente pequeno, portanto simples de se resolver;
+2. O BUG-001 se tratava de uma função que caso implementada corretamente, traria maior polimento ao aplicativo;
 
 ------------------------------------------------------------------------
 
@@ -278,6 +279,41 @@ Primeira etapa foi investigar o código fonte do projeto na procura de elementos
 
 **Possíveis impactos da alteração:** Tarefas são filtradas corretamente, número de tarefas completas é atualizado corretamente também como consequência disso
 
+### BUG-001 - O usuário deve cadastrar uma tarefa com título obrigatório
+
+**Comportamento observado:** Tarefas estavam com o campo de título opcional
+
+**Causa provável antes da investigação:** A falta de algum filtro na interface da task, ou a falta de um check na hora de salvar a tarefa
+
+**Como o problema foi investigado?** 
+
+Após vasculhar os arquivos no código fonte relevantes ao objeto da tarefa, foi percebido a falta de um check para textos vazios no arquivo TextFormScreen.tsx, especificamente na função handleSave(), responsável por salvar o arquivo
+
+**Causa identificada:** Falta de check para título vazio na página de preenchimento de tarefa
+
+**Local do problema:** função handleSave() no arquivo TextFormScreen.tsx
+
+**Correção proposta:** Adicionar o seguinte check logo no início da função handleSave():
+
+```tsx
+const trimmedTitle = title.trim();
+    if (!trimmedTitle) {
+      Alert.alert('Atenção', 'Tarefa deve conter título.');
+      navigation.goBack();
+      return;
+    }
+
+    setTitleError('');
+```
+
+e o state correspondente:
+
+```tsx
+  const [titleError, setTitleError] = useState('');
+```
+
+**Possíveis impactos da alteração:** Ao criar ou editar tarefas, o usuário irá ser impedido de saltar suas alterações caso a tarefa não tenha título
+
 ------------------------------------------------------------------------
 ## 5. Correção realizada
 
@@ -290,6 +326,16 @@ Primeira etapa foi investigar o código fonte do projeto na procura de elementos
 **Resultado após a alteração:** Tarefas são filtradas corretamente, número de tarefas completas é atualizado corretamente também como consequência disso
 
 **Evidências:** Ao filtrar por completas, as tarefas completas irão aparecer e a quantia de tarefas concluídas logo abaixo do título da página irá subir
+
+### BUG-001 - O usuário deve cadastrar uma tarefa com título obrigatório
+
+**Alteração realizada:** Adicionado um state de erro para os casos onde um título não tenha sido provido pelo usuário. Adicionado um check dentro da função handleSave(), responsável por checar se o título foi ou não provido
+
+**Arquivos/componentes alterados:** Função handleSave() do arquivo TaskFormScreen.tsx, também foi adicionado mais um state a lista de states encontrada no mesmo
+
+**Resultado após a alteração:** Caso o usuário tente salvar uma tarefa sem prover um título, o aplicativo mostra um alerta e volta para tela anterior 
+
+**Evidências:** Ao tentar salvar tarefa sem título, um aviso irá aparecer informando que o usuário deve, obrigatoriamente, prover um título, após isso será enviado a ultima tela em que esteve
 
 ---
 ## 6. Validação da correção
@@ -316,6 +362,25 @@ Sim, filtro por pendentes
 **Evidência:**
 Ao filtrar por completas, as tarefas completas irão aparecer e a quantia de tarefas concluídas logo abaixo do título da página irá subir
 
+### BUG-001 - O usuário deve cadastrar uma tarefa com título obrigatório
+
+**Resultado esperado:** Ao tentar salvar tarefa sem título, o usuário deve receber um alerta e ser enviado a página anterior
+
+**Resultado obtido após a correção:** Mesmo do resultado esperado
+
+**O problema original deixou de ocorrer?** Sim
+
+**Outras funcionalidades relacionadas foram verificadas?**
+
+Sim, edição de tarefas e tarefas sem descrição
+
+**Status atual:**
+-   FIXED --- corrigido pela equipe de desenvolvimento e aguardando
+    validação do QA;
+
+**Evidência:**
+Ao tentar salvar tarefa sem título, um aviso irá aparecer informando que o usuário deve, obrigatoriamente, prover um título, após isso será enviado a ultima tela em que esteve
+
 ------------------------------------------------------------------------
 
 ## 7. Sugestões de melhoria recebidas
@@ -323,11 +388,13 @@ Ao filtrar por completas, as tarefas completas irão aparecer e a quantia de tar
 As sugestões de melhoria apresentadas no diagnóstico original **não
 devem ser tratadas automaticamente como bugs**.
 
-  Sugestão   Tipo                                                   Prioridade sugerida   Justificativa
-  ---------- ------------------------------------------------------ --------------------- ---------------
-             UX / Interface / Desempenho / Funcionalidade / Outro                         
-                                                                                          
-                                                                                          
+| Sugestão | Tipo           | Prioridade Sugerida | Justificativa |
+| -------- | -------------- | ------------------- | ------------- |
+|          | Ux             |                     |               |
+|          | Interface      |                     |               |
+|          | Desempenho     |                     |               |
+|          | Funcionalidade |                     |               |
+|          | Outro          |                     |               |
 
 Neste momento, priorize a estabilização dos defeitos confirmados. As
 melhorias poderão compor o backlog das próximas etapas.
@@ -358,15 +425,15 @@ Justifique tecnicamente a resposta.
 
 ## 9. Resumo da Sprint
 
-**Quantidade de ocorrências analisadas:**\
-**Bugs confirmados:**\
-**Bugs não reproduzidos:**\
-**Ocorrências que não eram bugs:**\
-**Bugs duplicados:**\
-**Bugs com informações insuficientes:**\
-**Bugs corrigidos:**\
-**Bugs pendentes:**\
-**Melhorias mantidas no backlog:**
+**Quantidade de ocorrências analisadas:** 5
+**Bugs confirmados:** 5
+**Bugs não reproduzidos:** 0
+**Ocorrências que não eram bugs:** 5
+**Bugs duplicados:** 0
+**Bugs com informações insuficientes:** 0
+**Bugs corrigidos:** 2
+**Bugs pendentes:** 3
+**Melhorias mantidas no backlog:** 2
 
 ### Principais aprendizados da equipe
 

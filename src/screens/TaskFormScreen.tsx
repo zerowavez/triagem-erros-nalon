@@ -11,11 +11,22 @@ export function TaskFormScreen({ navigation, route }: NativeStackScreenProps<Roo
   const { addTask, updateTask, getTask } = useTasks();
   const editingTask = useMemo(() => route.params?.taskId ? getTask(route.params.taskId) : undefined, [route.params?.taskId]);
 
+  const [titleError, setTitleError] = useState('');
   const [title, setTitle] = useState(editingTask?.title ?? '');
   const [description, setDescription] = useState(editingTask?.description ?? '');
   const [priority, setPriority] = useState<TaskPriority>(editingTask?.priority ?? 'media');
 
   async function handleSave() {
+    const trimmedTitle = title.trim();
+
+    if (!trimmedTitle) {
+      Alert.alert('Atenção', 'Tarefa deve conter título.');
+      navigation.goBack();
+      return;
+    }
+
+    setTitleError('');
+
     const draft = { title, description, priority };
     if (editingTask) {
       await updateTask(editingTask.id, draft);

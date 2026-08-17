@@ -22,7 +22,7 @@ export function TaskDetailsScreen({ navigation, route }: NativeStackScreenProps<
 
   return (
     <View style={styles.screen}>
-      <Text style={styles.title}>{task.title || '(Sem título)'}</Text>
+      <Text style={styles.title}>{task.title}</Text>
       <Text style={styles.status}>{task.completed ? 'Concluída' : 'Pendente'}</Text>
       <Text style={styles.label}>Descrição</Text>
       <Text style={styles.description}>{task.description || 'Sem descrição.'}</Text>
