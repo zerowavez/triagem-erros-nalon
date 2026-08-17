@@ -121,12 +121,12 @@ Para cada ocorrência, informe o resultado da validação.
 
 **Título: RNF03 - A interface deve funcionar em diferentes tamanhos de tela.**
 
-**Conseguimos reproduzir?** Sim
+**Conseguimos reproduzir?** Sim, mas talvez seja erro do expo, não conseguimos confirmar.
 
 **Status da triagem:**
-- CONFIRMADO
+- NÃO É BUG
 
-**Justificativa**: A interface possui tamanho fixo e não é responsiva.
+**Justificativa**: A interface possui tamanho fixo e não é responsiva, ao menos em tablets.
 
 **Evidência da validação:** Os passos para reprodução foram seguidos confirmado.
 
@@ -314,6 +314,24 @@ e o state correspondente:
 
 **Possíveis impactos da alteração:** Ao criar ou editar tarefas, o usuário irá ser impedido de saltar suas alterações caso a tarefa não tenha título
 
+### BUG-004 O usuário deve filtrar tarefas por status
+
+**Comportamento observado:** Filtragem de tarefas não estava funcionando corretamente. Tarefas concluídas não apareciam ao filtrar por concluídas
+
+**Causa provável antes da investigação:** Algum filtro sendo aplicado indevidamente durante o processo de filtragem, ou só não sendo aplicado
+
+**Como o problema foi investigado?** 
+
+O problema foi resolvido juntamente ao BUG-002, onde houve uma análise dos arquivos relacionados a filtragem de tarefas em que foi descoberto que a filtragem inteira acontecia na const visibleTasks() dentro do arquivo HomePage.tsx
+
+**Causa identificada:** Utilização de filtro incorreto na página responsável pela filtragem de tarefas
+
+**Local do problema:** const "VisibleTasks" dentro do arquivo HomeScreen.tsx
+
+**Correção proposta:** Remover ponto de exclamação que antecede "task.completed" na linha 15 de HomeScreen.tsx
+
+**Possíveis impactos da alteração:**  Tarefas são filtradas corretamente, número de tarefas completas é atualizado corretamente também como consequência disso
+
 ------------------------------------------------------------------------
 ## 5. Correção realizada
 
@@ -325,7 +343,7 @@ e o state correspondente:
 
 **Resultado após a alteração:** Tarefas são filtradas corretamente, número de tarefas completas é atualizado corretamente também como consequência disso
 
-**Evidências:** Ao filtrar por completas, as tarefas completas irão aparecer e a quantia de tarefas concluídas logo abaixo do título da página irá subir
+**Evidências:** Ao filtrar por completas, as tarefas completas irão aparecer
 
 ### BUG-001 - O usuário deve cadastrar uma tarefa com título obrigatório
 
@@ -337,6 +355,16 @@ e o state correspondente:
 
 **Evidências:** Ao tentar salvar tarefa sem título, um aviso irá aparecer informando que o usuário deve, obrigatoriamente, prover um título, após isso será enviado a ultima tela em que esteve
 
+### BUG-004 - O usuário deve filtrar tarefas por status
+
+**Alteração realizada:** Ponto de exclamação removido na linha 15 do arquivo HomeScreen.tsx, logo antes do trecho "task.completed"
+
+**Arquivos/componentes alterados:** const VisibleTasks do arquivo HomeScreen.tsx
+
+**Resultado após a alteração:** Tarefas são filtradas corretamente, número de tarefas completas é atualizado corretamente também como consequência disso
+
+**Evidências:** Ao filtrar por completas, as tarefas completas irão aparecer e a quantia de tarefas concluídas logo abaixo do título da página irá subir
+
 ---
 ## 6. Validação da correção
 
@@ -345,7 +373,7 @@ originalmente para reproduzir o problema.
 
 ### BUG-002 - O usuário deve concluir uma tarefa corretamente
 
-**Resultado esperado:** Ao concluir uma tarefa, elas devem ser mostradas ao usuário filtrar por concluídas, além disso o número de concluídas deve aumentar
+**Resultado esperado:** Ao concluir uma tarefa, elas devem ser mostradas ao usuário filtrar por concluídas
 
 **Resultado obtido após a correção:** Mesmo do resultado esperado
 
@@ -360,7 +388,7 @@ Sim, filtro por pendentes
     validação do QA;
 
 **Evidência:**
-Ao filtrar por completas, as tarefas completas irão aparecer e a quantia de tarefas concluídas logo abaixo do título da página irá subir
+Ao filtrar por completas, as tarefas completas irão todas aparecer
 
 ### BUG-001 - O usuário deve cadastrar uma tarefa com título obrigatório
 
@@ -381,6 +409,25 @@ Sim, edição de tarefas e tarefas sem descrição
 **Evidência:**
 Ao tentar salvar tarefa sem título, um aviso irá aparecer informando que o usuário deve, obrigatoriamente, prover um título, após isso será enviado a ultima tela em que esteve
 
+### BUG-004 - O usuário deve filtrar tarefas por status
+
+**Resultado esperado:** Ao concluir uma tarefa, elas devem ser mostradas ao usuário filtrar por concluídas
+
+**Resultado obtido após a correção:** Mesmo do resultado esperado
+
+**O problema original deixou de ocorrer?** Sim
+
+**Outras funcionalidades relacionadas foram verificadas?**
+
+Sim, filtro por pendentes
+
+**Status atual:**
+-   FIXED --- corrigido pela equipe de desenvolvimento e aguardando
+    validação do QA;
+
+**Evidência:**
+Ao filtrar por completas, as tarefas completas irão todas aparecer
+
 ------------------------------------------------------------------------
 
 ## 7. Sugestões de melhoria recebidas
@@ -388,16 +435,12 @@ Ao tentar salvar tarefa sem título, um aviso irá aparecer informando que o usu
 As sugestões de melhoria apresentadas no diagnóstico original **não
 devem ser tratadas automaticamente como bugs**.
 
-| Sugestão | Tipo           | Prioridade Sugerida | Justificativa |
-| -------- | -------------- | ------------------- | ------------- |
-|          | Ux             |                     |               |
-|          | Interface      |                     |               |
-|          | Desempenho     |                     |               |
-|          | Funcionalidade |                     |               |
-|          | Outro          |                     |               |
+| Sugestão                                                                 | Tipo           | Prioridade Sugerida | Justificativa                                                      |
+| ------------------------------------------------------------------------ | -------------- | ------------------- | ------------------------------------------------------------------ |
+| Melhorar a responsividade da interface para diferentes tamanhos de tela. | UX             | Alta                | Necessário para a experiência de usuários em tablets/foldables     |
+| Adicionar uma tela para exibição da versão do aplicativo.                | Interface      | Baixa               | A versão já pode ser vista na página principal                     |
+| Atualizar corretamente os contadores de tarefas.                         | Funcionalidade | Alta                | Traz polimento ao sistema, é um elemento íntegro da tela principal |
 
-Neste momento, priorize a estabilização dos defeitos confirmados. As
-melhorias poderão compor o backlog das próximas etapas.
 
 ------------------------------------------------------------------------
 
@@ -419,20 +462,20 @@ Considere:
 
 **A aplicação está mais próxima de uma versão apta para publicação?**
 
-Justifique tecnicamente a resposta.
+Mais ou menos, agora que bugs óbvios foram corrigidos, o aplicativo conta com um polimento maior lhe tornando mais apelativo aos possíveis usuários... porém ainda lhe falta a responsabilidade necessária para rodar confortavelmente em dispositivos mais largos como tablets ou foldables.
 
 ------------------------------------------------------------------------
 
 ## 9. Resumo da Sprint
 
-**Quantidade de ocorrências analisadas:** 5
-**Bugs confirmados:** 5
+**Quantidade de ocorrências analisadas:** 10
+**Bugs confirmados:** 4
 **Bugs não reproduzidos:** 0
-**Ocorrências que não eram bugs:** 5
+**Ocorrências que não eram bugs:** 1
 **Bugs duplicados:** 0
 **Bugs com informações insuficientes:** 0
-**Bugs corrigidos:** 2
-**Bugs pendentes:** 3
+**Bugs corrigidos:** 3
+**Bugs pendentes:** 1
 **Melhorias mantidas no backlog:** 2
 
 ### Principais aprendizados da equipe
